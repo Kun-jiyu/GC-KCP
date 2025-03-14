@@ -48,5 +48,5 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: Ayaka
-          path: Ayaka-*.jar
+          name: Grasscutter-Build
+          path: grasscutter_n-*.jar  # 修改这里
