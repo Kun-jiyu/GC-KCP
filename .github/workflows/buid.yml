@@ -18,14 +18,18 @@ on:
 jobs:
   Build-Server-Jar:
     runs-on: ubuntu-latest
+    env:
+      LANG: en_US.UTF-8  # 强制使用英文编码
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: '17'
+
       - name: Cache gradle files
         uses: actions/cache@v3
         with:
@@ -36,17 +40,24 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('*.gradle', 'gradle.properties', '**/*.accesswidener') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Download Handbook
         uses: suisei-cn/actions-download-file@v1.4.0
         with:
           url: https://api.grasscutter.io/static/handbook.html
           target: src/main/resources/html/
+
       - name: Grant execution permission for Gradle wrapper
         run: chmod +x ./gradlew
-      - name: Run Gradle
-        run: ./gradlew -PskipHandbook=1 && ./gradlew jar -PskipHandbook=1
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean build -PskipHandbook=1  # 合并构建命令
+          echo "===== 生成文件列表 ====="  # 调试信息
+          ls -lah build/libs/
+
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
           name: Grasscutter-Build
-          path: grasscutter_n-*.jar  # 修改这里
+          path: build/libs/grasscutter_n-*.jar  # 修正路径层级
