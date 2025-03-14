@@ -60,4 +60,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: GC-KCP-Build
-          path: build/libs/GC-KCP-*.jar  # 修正路径层级
+          path: GC-KCP-*.jar  # 修正路径层级
